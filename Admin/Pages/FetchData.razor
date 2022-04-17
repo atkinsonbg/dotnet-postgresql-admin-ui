@@ -43,6 +43,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var results = DatabaseService.FromRawSqlAsync("select * from users;");
+        var results = DatabaseService.FromRawSqlAsync("select * from users;").Result;
     }
 }

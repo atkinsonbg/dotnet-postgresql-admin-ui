@@ -8,5 +8,6 @@ public class DatabaseQueryResult
     public DatabaseQueryResult()
     {
         this.Headers = new List<string>();
+        this.Rows = new List<List<string>>();
     }
 }

@@ -3,10 +3,10 @@ using Npgsql;
 
 public class DatabaseService
 {
-    public async Task<List<List<string>>> FromRawSqlAsync(string query)
+    public async Task<DatabaseQueryResult> FromRawSqlAsync(string query)
     {
         string constr = "Server=127.0.0.1;Port=5432;Database=postgres;User Id=postgres;";
-        List<List<string>> results = new List<List<string>>();
+        DatabaseQueryResult results = new DatabaseQueryResult();
         using (NpgsqlConnection con = new NpgsqlConnection(constr))
         {
             using (NpgsqlCommand cmd = new NpgsqlCommand(query))
@@ -16,15 +16,12 @@ public class DatabaseService
                 using (NpgsqlDataReader sdr = cmd.ExecuteReader())
                 {
                     int fieldCount = sdr.FieldCount - 1;
-                    var x = sdr.GetColumnSchema();
+                    var schema = sdr.GetColumnSchema();
 
-                    List<string> colNames = new List<string>();
-                    foreach (var colName in x)
+                    foreach (var s in schema)
                     {
-                        colNames.Add(colName.ColumnName);
+                        results.Headers.Add(s.ColumnName);
                     }
-                    results.Add(colNames);
-
 
                     while (sdr.Read())
                     {
@@ -34,7 +31,7 @@ public class DatabaseService
                         {
                             colValues.Add(sdr[i].ToString());
                         }
-                        results.Add(colValues);
+                        results.Rows.Add(colValues);
                     }
                 }
                 con.Close();

@@ -3,14 +3,13 @@
 <PageTitle>Weather forecast</PageTitle>
 
 @using Admin.Data
-@inject WeatherForecastService ForecastService
 @inject DatabaseService DatabaseService
 
 <h1>Weather forecast</h1>
 
 <p>This component demonstrates fetching data from a service.</p>
 
-@if (forecasts == null)
+@if (results == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -19,20 +18,20 @@ else
     <table class="table">
     <thead>
         <tr>
-            <th>Date</th>
-            <th>Temp. (C)</th>
-            <th>Temp. (F)</th>
-            <th>Summary</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var forecast in forecasts)
+            @foreach (var header in results.Headers)
+                {
+                    <td>@header</td>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var row in results.Rows)
             {
                 <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
+                    @foreach (var r in row)
+                    {
+                        <td>@r</td>
+                    }
                 </tr>
             }
         </tbody>
@@ -40,12 +39,10 @@ else
 }
 
 @code {
-    private WeatherForecast[]? forecasts;
+    private DatabaseQueryResult results;
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
-        var x = DatabaseService.FromRawSqlAsync("select * from users;");
-        Console.WriteLine($"COUNT!!!! === {x.Result.Count()}");
+        var results = DatabaseService.FromRawSqlAsync("select * from users;");
     }
 }

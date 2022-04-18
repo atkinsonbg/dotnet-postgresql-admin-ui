@@ -2,10 +2,78 @@
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+@using Admin.Data
+@inject DatabaseService DatabaseService
 
-Welcome to your new app.
+<RadzenSplitter Orientation="Orientation.Vertical" style="height: 400px; border: 1px solid rgba(0,0,0,.08);">
+    <RadzenSplitterPane Size="100px">
+        <RadzenSplitter>
+            <RadzenSplitterPane Size="20%" Min="30px" Max="40%">
+                <RadzenTree Style="height: 300px" Data=@schema>
+                    <RadzenTreeLevel TextProperty="Table" ChildrenProperty="Columns" />
+                    <RadzenTreeLevel TextProperty="Column" />
+                </RadzenTree>
+            </RadzenSplitterPane>
+            <RadzenSplitterPane>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+                <RadzenSplitter Orientation="Orientation.Vertical"
+                    style="height: 400px; border: 1px solid rgba(0,0,0,.08);">
+                    <RadzenSplitterPane Size="100px">
+                        <RadzenSplitter>
+                            <RadzenSplitterPane Size="50px" Min="30px">
+                                Query Pane
+                            </RadzenSplitterPane>
+                        </RadzenSplitter>
+                    </RadzenSplitterPane>
+                    <RadzenSplitterPane Size="100px">
+                        <RadzenSplitter>
+                            <RadzenSplitterPane Size="50px" Min="30px">
+                                @if (results == null)
+                                {
+                                    <p><em>Loading...</em></p>
+                                }
+                                else
+                                {
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                @foreach (var header in results.Headers)
+                                                {
+                                                    <td>@header</td>
+                                                }
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var row in results.Rows)
+                                            {
+                                                <tr>
+                                                    @foreach (var r in row)
+                                                    {
+                                                        <td>@r</td>
+                                                    }
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                            </RadzenSplitterPane>
+                        </RadzenSplitter>
+                    </RadzenSplitterPane>
+                </RadzenSplitter>
 
-<RadzenButton Text="Hi"></RadzenButton>
+
+            </RadzenSplitterPane>
+        </RadzenSplitter>
+    </RadzenSplitterPane>
+</RadzenSplitter>
+
+@code {
+    private DatabaseQueryResult results;
+    private List<DatabaseSchemaResult> schema;
+
+    protected override async Task OnInitializedAsync()
+    {
+        results = await DatabaseService.FromRawSqlAsync("select * from users;");
+        schema = DatabaseService.GetDatabaseSchema().Result;
+    }
+}

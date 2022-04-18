@@ -7,3 +7,5 @@ VALUES
 INSERT INTO users
 VALUES
     (3, 'Jane', 'Doe');
+
+ALTER SEQUENCE users_id_seq RESTART WITH 4;

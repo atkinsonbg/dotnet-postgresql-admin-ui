@@ -1,6 +1,6 @@
 ﻿@page "/fetchdata"
 
-<PageTitle>Weather forecast</PageTitle>
+<PageTitle>Query</PageTitle>
 
 @using Admin.Data
 @inject DatabaseService DatabaseService
@@ -40,9 +40,11 @@ else
 
 @code {
     private DatabaseQueryResult results;
+    //private List<IGrouping<string, DatabaseSchemaResult>> schema;
 
     protected override async Task OnInitializedAsync()
     {
-        var results = DatabaseService.FromRawSqlAsync("select * from users;").Result;
+        results = await DatabaseService.FromRawSqlAsync("select * from users;");
+        //schema = DatabaseService.GetDatabaseSchema().Result;
     }
 }

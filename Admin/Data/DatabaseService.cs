@@ -5,7 +5,7 @@ public class DatabaseService
 {
     public async Task<DatabaseQueryResult> FromRawSqlAsync(string query)
     {
-        string constr = "Server=127.0.0.1;Port=5432;Database=postgres;User Id=postgres;";
+        string constr = Environment.GetEnvironmentVariable("CONNECTION_STRING");
         DatabaseQueryResult results = new DatabaseQueryResult();
         using (NpgsqlConnection con = new NpgsqlConnection(constr))
         {
@@ -38,5 +38,49 @@ public class DatabaseService
             }
         }
         return results;
+    }
+
+    public async Task<List<DatabaseSchemaResult>> GetDatabaseSchema()
+    {
+        string schema = Environment.GetEnvironmentVariable("SCHEMA");
+
+        string query = @"SELECT t.table_name, c.column_name, c.data_type FROM information_schema.tables as t 
+                        JOIN information_schema.columns as c on t.table_name = c.table_name
+                        WHERE t.table_schema = '" + schema + "';";
+
+        string constr = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+
+        List<SchemaQueryResult> results = new List<SchemaQueryResult>();
+
+        using (NpgsqlConnection con = new NpgsqlConnection(constr))
+        {
+            using (NpgsqlCommand cmd = new NpgsqlCommand(query))
+            {
+                cmd.Connection = con;
+                con.Open();
+                using (NpgsqlDataReader sdr = cmd.ExecuteReader())
+                {
+                    while (sdr.Read())
+                    {
+                        results.Add(new SchemaQueryResult()
+                        {
+                            Table = sdr["table_name"].ToString(),
+                            Column = sdr["column_name"].ToString(),
+                            Type = sdr["data_type"].ToString()
+                        });
+                    }
+                }
+                con.Close();
+            }
+        }
+
+        List<DatabaseSchemaResult> groupedSchema = results.GroupBy(u => u.Table)
+                                    .Select(grp => new DatabaseSchemaResult
+                                    {
+                                        Table = grp.Key,
+                                        Columns = grp.ToList()
+                                    }).ToList();
+
+        return groupedSchema;
     }
 }

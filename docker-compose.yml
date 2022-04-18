@@ -5,7 +5,7 @@ services:
     container_name: api_postgres
     image: postgres:11.6-alpine
     environment:
-      POSTGRES_DB: api_postgres
+      POSTGRES_DB: postgres
     volumes:
       - ./Sql/:/docker-entrypoint-initdb.d/
     ports:

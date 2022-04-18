@@ -88,3 +88,13 @@ ul, #schema {
   .rz-treenode-content .rz-treenode-label {
     display: block !important;
 }
+
+.rz-treenode-content:hover .rz-treenode-label:hover, rz-treenode:hover, .rz-tree-toggler:hover, rzi:hover, rzi-caret-right:hover {
+    background-color: #fff !important;
+    color: #212529 !important;
+}
+
+.rz-treenode-content-selected .rz-treenode-label {
+    background-color: #fff !important;
+    color: #212529 !important;
+}

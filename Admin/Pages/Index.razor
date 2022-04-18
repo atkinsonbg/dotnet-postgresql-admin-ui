@@ -17,6 +17,8 @@
                         <RadzenTreeLevel TextProperty="Table" ChildrenProperty="Columns">
                             <Template>
                                 <strong>@context.Text</strong>
+                                <RadzenButton Click=@(args => OnClickTable(@context.Text)) Icon="add_circle_outline"
+                                    ButtonStyle="ButtonStyle.Secondary" />
                             </Template>
                         </RadzenTreeLevel>
                         <RadzenTreeLevel TextProperty="Column" HasChildren="@((column) => false)">
@@ -113,5 +115,10 @@
         {
             errorMessage = ex.Message;
         }
+    }
+
+    void OnClickTable(string tableName)
+    {
+        query = $"select * from {tableName}";
     }
 }

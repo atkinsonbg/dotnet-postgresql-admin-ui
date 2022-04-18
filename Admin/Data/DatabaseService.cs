@@ -13,26 +13,33 @@ public class DatabaseService
             {
                 cmd.Connection = con;
                 con.Open();
-                using (NpgsqlDataReader sdr = cmd.ExecuteReader())
+                try
                 {
-                    int fieldCount = sdr.FieldCount - 1;
-                    var schema = sdr.GetColumnSchema();
-
-                    foreach (var s in schema)
+                    using (NpgsqlDataReader sdr = cmd.ExecuteReader())
                     {
-                        results.Headers.Add(s.ColumnName);
-                    }
+                        int fieldCount = sdr.FieldCount - 1;
+                        var schema = sdr.GetColumnSchema();
 
-                    while (sdr.Read())
-                    {
-                        List<string> colValues = new List<string>();
-
-                        for (int i = 0; i <= fieldCount; i++)
+                        foreach (var s in schema)
                         {
-                            colValues.Add(sdr[i].ToString());
+                            results.Headers.Add(s.ColumnName);
                         }
-                        results.Rows.Add(colValues);
+
+                        while (sdr.Read())
+                        {
+                            List<string> colValues = new List<string>();
+
+                            for (int i = 0; i <= fieldCount; i++)
+                            {
+                                colValues.Add(sdr[i].ToString());
+                            }
+                            results.Rows.Add(colValues);
+                        }
                     }
+                }
+                catch (System.AggregateException ex)
+                {
+                    results.ErrorMessage = ex.Message;
                 }
                 con.Close();
             }

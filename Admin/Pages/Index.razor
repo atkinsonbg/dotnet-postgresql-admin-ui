@@ -39,7 +39,7 @@
                                 <RadzenCard style="height: -webkit-fill-available;">
                                     <RadzenTextArea Class="w-100" @bind-Value=@query
                                         style="height: -webkit-fill-available; margin-bottom: 10px;" />
-                                    <RadzenButton Click=@(args => OnClick("Secondary button")) Text="Execute"
+                                    <RadzenButton Click=@(args => OnClickExecute()) Text="Execute"
                                         ButtonStyle="ButtonStyle.Secondary" />
                                     <p>
                                         <label>@errorMessage</label>
@@ -102,7 +102,7 @@
         schema = DatabaseService.GetDatabaseSchema().Result;
     }
 
-    void OnClick(string buttonName)
+    void OnClickExecute()
     {
         try
         {

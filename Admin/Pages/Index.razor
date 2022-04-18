@@ -3,6 +3,7 @@
 <PageTitle>Index</PageTitle>
 
 @using Admin.Data
+
 @inject DatabaseService DatabaseService
 @inject IJSRuntime JsRuntime
 
@@ -11,25 +12,21 @@
         <RadzenSplitter>
             <RadzenSplitterPane Size="20%" Min="30px" Max="40%">
                 <RadzenCard style="height: 100%;">
-                    <ul id="schema">
-                        @foreach (var s in schema)
-                        {
-                            <li>
-                                <span class="caret">
-                                    @s.Table
-                                </span>
-                                <ul class="nested">
-                                    @foreach (var col in s.Columns)
-                                    {
-                                        <li>
-                                            <span class="col-name">@col.Column</span>
-                                            <span class="col-type">(@col.Type)</span>
-                                        </li>
-                                    }
-                                </ul>
-                            </li>
-                        }
-                    </ul>
+                    <span>@Environment.GetEnvironmentVariable("SCHEMA")</span>
+                    <RadzenTree Data=@schema>
+                        <RadzenTreeLevel TextProperty="Table" ChildrenProperty="Columns">
+                            <Template>
+                                <strong>@context.Text</strong>
+                            </Template>
+                        </RadzenTreeLevel>
+                        <RadzenTreeLevel TextProperty="Column" HasChildren="@((column) => false)">
+                            <Template>
+                                <span class="col-name">@((context.Value as SchemaQueryResult).Column)</span>
+                                <span class="col-type">@((context.Value as SchemaQueryResult).Type)</span>
+                            </Template>
+                        </RadzenTreeLevel>
+                    </RadzenTree>
+
                 </RadzenCard>
             </RadzenSplitterPane>
             <RadzenSplitterPane>
@@ -103,11 +100,6 @@
     protected override async Task OnInitializedAsync()
     {
         schema = DatabaseService.GetDatabaseSchema().Result;
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        await JsRuntime.InvokeVoidAsync("wireSchemaTreeView");
     }
 
     void OnClick(string buttonName)

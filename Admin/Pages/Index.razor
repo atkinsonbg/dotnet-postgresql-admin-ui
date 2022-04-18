@@ -11,10 +11,25 @@
         <RadzenSplitter>
             <RadzenSplitterPane Size="20%" Min="30px" Max="40%">
                 <RadzenCard style="height: 100%;">
-                    <RadzenTree Style="height: 300px" Data=@schema>
-                        <RadzenTreeLevel TextProperty="Table" ChildrenProperty="Columns" />
-                        <RadzenTreeLevel TextProperty="Column" />
-                    </RadzenTree>
+                    <ul id="schema">
+                        @foreach (var s in schema)
+                        {
+                            <li>
+                                <span class="caret">
+                                    @s.Table
+                                </span>
+                                <ul class="nested">
+                                    @foreach (var col in s.Columns)
+                                    {
+                                        <li>
+                                            <span class="col-name">@col.Column</span>
+                                            <span class="col-type">(@col.Type)</span>
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+                    </ul>
                 </RadzenCard>
             </RadzenSplitterPane>
             <RadzenSplitterPane>
@@ -90,6 +105,11 @@
         schema = DatabaseService.GetDatabaseSchema().Result;
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JsRuntime.InvokeVoidAsync("wireSchemaTreeView");
+    }
+
     void OnClick(string buttonName)
     {
         try
@@ -99,7 +119,6 @@
         }
         catch (Exception ex)
         {
-            //JsRuntime.InvokeVoidAsync("alert", ex.Message);
             errorMessage = ex.Message;
         }
     }

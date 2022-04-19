@@ -47,12 +47,12 @@ a, .btn-link {
     z-index: 1000;
 }
 
-    #blazor-error-ui .dismiss {
-        cursor: pointer;
-        position: absolute;
-        right: 0.75rem;
-        top: 0.5rem;
-    }
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+}
 
 .blazor-error-boundary {
     padding: 1rem 1rem 1rem 3.7rem;
@@ -69,23 +69,23 @@ a, .btn-link {
 
 ul, #schema {
     list-style-type: none;
-  }
-  
-  #schema {
+}
+
+#schema {
     margin: 0;
     padding: 0;
-  }
-  
-  .col-name {
+}
+
+.col-name {
     display: block !important;
-  }
+}
 
-  .col-type {
-      display: block !important;
-      font-size: 10px;
-  }
+.col-type {
+    display: block !important;
+    font-size: 10px;
+}
 
-  .rz-treenode-content .rz-treenode-label {
+.rz-treenode-content .rz-treenode-label {
     display: block !important;
 }
 

@@ -5,8 +5,6 @@ namespace Admin.Data;
 public class DatabaseQueryResult
 {
     public Dictionary<string, object> Headers { get; set; }
-    public List<List<string>> Rows { get; set; }
-
     public TableQueryResult Result { get; set; }
     public string ErrorMessage { get; set; }
 
@@ -23,13 +21,13 @@ public class TableQueryResult
     {
         get
         {
-            return this.Items.Count();
+            return this.Rows.Count();
         }
     }
-    public List<ExpandoObject> Items { get; set; }
+    public List<ExpandoObject> Rows { get; set; }
 
     public TableQueryResult()
     {
-        this.Items = new List<ExpandoObject>();
+        this.Rows = new List<ExpandoObject>();
     }
 }

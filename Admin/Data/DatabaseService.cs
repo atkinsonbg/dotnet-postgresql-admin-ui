@@ -33,7 +33,7 @@ public class DatabaseService
                             {
                                 ((IDictionary<String, object>)row)[results.Headers.Keys.ElementAt(i)] = sdr[i].ToString();
                             }
-                            results.Result.Items.Add(row);
+                            results.Result.Rows.Add(row);
                         }
                     }
                 }

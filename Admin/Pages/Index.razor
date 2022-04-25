@@ -61,7 +61,7 @@
                                     }
                                     else
                                     {
-                                        <RadzenGrid Count="results.Result.TotalCount" PageSize="5"
+                                        <RadzenGrid Count="results.Result.TotalCount" PageSize="2" AllowPaging="true"
                                         Data="@results.Result.Rows">
                                             <Columns>
                                                 @foreach (var key in results.Headers.Keys)

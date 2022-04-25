@@ -1,5 +1,6 @@
 namespace Admin.Data;
 using Npgsql;
+using System.Dynamic;
 
 public class DatabaseService
 {
@@ -22,18 +23,17 @@ public class DatabaseService
 
                         foreach (var s in schema)
                         {
-                            results.Headers.Add(s.ColumnName);
+                            results.Headers.Add(s.ColumnName, s.ColumnName);
                         }
 
                         while (sdr.Read())
                         {
-                            List<string> colValues = new List<string>();
-
+                            dynamic row = new ExpandoObject();
                             for (int i = 0; i <= fieldCount; i++)
                             {
-                                colValues.Add(sdr[i].ToString());
+                                ((IDictionary<String, object>)row)[results.Headers.Keys.ElementAt(i)] = sdr[i].ToString();
                             }
-                            results.Rows.Add(colValues);
+                            results.Result.Items.Add(row);
                         }
                     }
                 }

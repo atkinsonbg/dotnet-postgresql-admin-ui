@@ -3,6 +3,7 @@
 <PageTitle>Index</PageTitle>
 
 @using Admin.Data
+@using System.Dynamic
 
 @inject DatabaseService DatabaseService
 @inject IJSRuntime JsRuntime
@@ -60,27 +61,21 @@
                                     }
                                     else
                                     {
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    @foreach (var header in results.Headers)
-                                                    {
-                                                        <td>@header</td>
-                                                    }
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach (var row in results.Rows)
+                                        <RadzenGrid Count="results.Result.TotalCount" PageSize="5"
+                                        Data="@results.Result.Items">
+                                            <Columns>
+                                                @foreach (var key in results.Headers.Keys)
                                                 {
-                                                    <tr>
-                                                        @foreach (var r in row)
-                                                        {
-                                                            <td>@r</td>
-                                                        }
-                                                    </tr>
+                                                    <RadzenGridColumn TItem="ExpandoObject" Property="@key"
+                                                Title="@results.Headers[key].ToString()">
+                                                        <Template Context="data">
+                                                            <span>@((data as IDictionary<string,
+                                                        object>)[key].ToString())</span>
+                                                        </Template>
+                                                    </RadzenGridColumn>
                                                 }
-                                            </tbody>
-                                        </table>
+                                            </Columns>
+                                        </RadzenGrid>
                                     }
                                 </RadzenCard>
                             </RadzenSplitterPane>
